@@ -37,3 +37,12 @@ main {
 .porthole:hover {
   background-color: #888888;
 }
+.hovered {
+  background-color: #58acf7;
+}
+
+@media screen and (min-device-width: 1200px) {
+  main {
+    width: 1000px;
+  }
+}
