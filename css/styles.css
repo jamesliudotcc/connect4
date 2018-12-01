@@ -1,0 +1,39 @@
+body {
+  background-color: #cccccc;
+}
+main {
+  display: grid;
+  grid-template-columns: repeat(7, 12vw);
+  grid-template-rows: repeat(6, 12vw);
+}
+.tile {
+  height: 100%;
+  width: 100%;
+  background-color: #0066c1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.porthole,
+.red,
+.yellow {
+  height: 80%;
+  width: 80%;
+  border-radius: 50%;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+}
+.porthole {
+  background-color: #cccccc;
+}
+.red {
+  background-image: url(../img/red-piece.png);
+}
+.yellow {
+  background-image: url(../img/yellow-piece.png);
+}
+.porthole:hover {
+  background-color: #888888;
+}
