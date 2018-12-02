@@ -85,14 +85,18 @@ function dropPiece(piece, currentColumnArr) {
   }
 }
 
+function closeTile(position) {
+  let tileToClose = document.getElementById(position);
+  tileToClose.removeEventListener('mouseenter', mouseoverHandler);
+  tileToClose.removeEventListener('mouseleave', mouseoutHandler);
+  tileToClose.removeEventListener('click', tileClickHandler);
+  tileToClose.classList.remove('hovered');
+}
+
 function closeColumn(currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
-    let tileToClose = document.getElementById(j);
-    tileToClose.removeEventListener('mouseenter', mouseoverHandler);
-    tileToClose.removeEventListener('mouseleave', mouseoutHandler);
-    tileToClose.removeEventListener('click', tileClickHandler);
-    tileToClose.classList.remove('hovered');
+    closeTile(j);
   }
 }
 
@@ -122,22 +126,36 @@ function checkWinner(position) {
     for (let i = rowStart; i < rowStart + COLS; i++) {
       horizLine.push(boardState[i]);
     }
-    console.log(horizLine);
     // loop through array to check if winner
     for (let i = 0; i < COLS - 3; i++) {
       let checkString = '';
       for (let j = 0; j < 4; j++) {
         checkString += horizLine[j + i];
       }
-      console.log(checkString);
       if (checkString == checkFor.repeat(4)) {
         declareWinner(checkFor);
       }
-    }
-    console.log('checking horizontal for', checkFor);
+    } // for
   }
   function checkVerticalWinner(position) {
-    console.log('checking vertical');
+    // populate an array for vert from position
+    let vertLine = [];
+    let colStart = position % COLS;
+    console.log(position, colStart);
+    for (let i = colStart; i < SIZE; i += COLS) {
+      vertLine.push(boardState[i]);
+    }
+    //loop through array to check if winner
+    for (let i = 0; i < ROWS - 3; i++) {
+      let checkString = '';
+      for (let j = 0; j < 4; j++) {
+        checkString += vertLine[j + i];
+      }
+      if (checkString == checkFor.repeat(4)) {
+        declareWinner(checkFor);
+      }
+    } // for
+    console.log('checking vertical for', vertLine, checkFor);
   }
   function checkDiag1Winner(position) {
     console.log('checking diagonal1');
@@ -158,7 +176,7 @@ function checkTie() {
   }
 }
 function declareWinner(winner) {
-  console.log(winner, 'wins!');
+  alert(winner + ' wins!');
 }
 
 function declareTie() {
