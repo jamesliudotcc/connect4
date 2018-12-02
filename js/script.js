@@ -44,6 +44,8 @@ function createGameBoard(boardSize) {
     boardTile.addEventListener('click', tileClickHandler);
   }
 }
+
+//click and mouse-over handlers
 function mouseoverHandler() {
   let currentColumn = this.id % COLS;
   for (let i = currentColumn; i < SIZE; i += COLS) {
@@ -70,6 +72,8 @@ function tileClickHandler() {
 
   checkTie();
 }
+
+// draw game as it is being played
 function dropPiece(piece, currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
@@ -85,24 +89,6 @@ function dropPiece(piece, currentColumnArr) {
   }
 }
 
-function closeTile(position) {
-  let tileToClose = document.getElementById(position);
-  tileToClose.removeEventListener('mouseenter', mouseoverHandler);
-  tileToClose.removeEventListener('mouseleave', mouseoutHandler);
-  tileToClose.removeEventListener('click', tileClickHandler);
-  tileToClose.classList.remove('hovered');
-}
-function closeColumn(currentColumnArr) {
-  for (let i = 0; i < ROWS; i++) {
-    let j = currentColumnArr[i];
-    closeTile(j);
-  }
-}
-function closeBoard() {
-  for (let i = 0; i < SIZE; i++) {
-    closeTile(i);
-  }
-}
 function nextTurn() {
   yellowsTurn = !yellowsTurn;
   let whoseTurn = document.getElementById('whose-turn');
@@ -114,14 +100,32 @@ function nextTurn() {
     whoseTurn.className = 'red-goes';
   }
 }
+
+//check for wins and ties, declare victory
 function checkWinner(position) {
   let checkFor = yellowsTurn ? 'yellow' : 'red';
   checkHorizWinner(position);
+
+  checkShortDiagWinner(position);
+  checkLongDiagWinner(position);
+
   if (position >= COLS * 3) {
     checkVerticalWinner(position);
-    checkDiag1Winner(position);
-    checkDiag2Winner(position);
   }
+
+  //helper function for each checking array
+  function checkArrayForWinner(createdArray) {
+    for (let i = 0; i < createdArray.length - 3; i++) {
+      let checkString = '';
+      for (let j = 0; j < 4; j++) {
+        checkString += createdArray[j + i];
+      }
+      if (checkString == checkFor.repeat(4)) {
+        declareWinner(checkFor);
+      }
+    } // for
+  }
+
   function checkHorizWinner(position) {
     // populate an array for horiz from position
     let horizLine = [];
@@ -129,41 +133,22 @@ function checkWinner(position) {
     for (let i = rowStart; i < rowStart + COLS; i++) {
       horizLine.push(boardState[i]);
     }
-    // loop through array to check if winner
-    for (let i = 0; i < COLS - 3; i++) {
-      let checkString = '';
-      for (let j = 0; j < 4; j++) {
-        checkString += horizLine[j + i];
-      }
-      if (checkString == checkFor.repeat(4)) {
-        declareWinner(checkFor);
-      }
-    } // for
+    checkArrayForWinner(horizLine);
   }
   function checkVerticalWinner(position) {
     // populate an array for vert from position
     let vertLine = [];
     let colStart = position % COLS;
-    console.log(position, colStart);
     for (let i = colStart; i < SIZE; i += COLS) {
       vertLine.push(boardState[i]);
     }
-    //loop through array to check if winner
-    for (let i = 0; i < ROWS - 3; i++) {
-      let checkString = '';
-      for (let j = 0; j < 4; j++) {
-        checkString += vertLine[j + i];
-      }
-      if (checkString == checkFor.repeat(4)) {
-        declareWinner(checkFor);
-      }
-    } // for
+    checkArrayForWinner(vertLine);
     console.log('checking vertical for', vertLine, checkFor);
   }
-  function checkDiag1Winner(position) {
+  function checkShortDiagWinner(position) {
     console.log('checking diagonal1');
   }
-  function checkDiag2Winner(position) {
+  function checkLongDiagWinner(position) {
     console.log('checking diagonal2');
   }
 }
@@ -184,10 +169,32 @@ function declareWinner(winner) {
 }
 
 function declareTie() {
-  document.getElementById('whose-turn').innerText =
-    'Tie. Reload to play again.';
-  document.getElementById('whose-turn').className = '';
+  closeBoard();
+  alert('Tie! You both lose.');
   // document.body.addEventListener('click', function() {
   //   document.location.reload(false);
   // });
+}
+
+// closing tiles, columns, board
+function closeTile(position) {
+  let tileToClose = document.getElementById(position);
+  tileToClose.removeEventListener('mouseenter', mouseoverHandler);
+  tileToClose.removeEventListener('mouseleave', mouseoutHandler);
+  tileToClose.removeEventListener('click', tileClickHandler);
+  tileToClose.classList.remove('hovered');
+}
+function closeColumn(currentColumnArr) {
+  for (let i = 0; i < ROWS; i++) {
+    let j = currentColumnArr[i];
+    closeTile(j);
+  }
+}
+function closeBoard() {
+  for (let i = 0; i < SIZE; i++) {
+    closeTile(i);
+  }
+  document.getElementById('whose-turn').innerText = 'Reload to play again.';
+  document.getElementById('whose-turn').className = ''; // why doe this only work
+  //when there is a tie?
 }
