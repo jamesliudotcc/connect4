@@ -75,8 +75,22 @@ function dropPiece(piece, currentColumnArr) {
       boardState[j] = piece;
       console.log(boardState);
       document.getElementById(j).firstChild.className = piece;
+      if (i == ROWS - 1) {
+        closeColumn(currentColumnArr);
+      }
       return;
     }
+  }
+}
+
+function closeColumn(currentColumnArr) {
+  for (let i = 0; i < ROWS; i++) {
+    let j = currentColumnArr[i];
+    let tileToClose = document.getElementById(j);
+    tileToClose.removeEventListener('mouseenter', mouseoverHandler);
+    tileToClose.removeEventListener('mouseleave', mouseoutHandler);
+    tileToClose.removeEventListener('click', tileClickHandler);
+    tileToClose.classList.remove('hovered');
   }
 }
 
@@ -93,3 +107,6 @@ function nextTurn() {
 }
 function checkWinner() {}
 function declareWinner(winner) {}
+function declareTie() {
+  document.location.reload(false);
+}
