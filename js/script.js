@@ -92,14 +92,17 @@ function closeTile(position) {
   tileToClose.removeEventListener('click', tileClickHandler);
   tileToClose.classList.remove('hovered');
 }
-
 function closeColumn(currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
     closeTile(j);
   }
 }
-
+function closeBoard() {
+  for (let i = 0; i < SIZE; i++) {
+    closeTile(i);
+  }
+}
 function nextTurn() {
   yellowsTurn = !yellowsTurn;
   let whoseTurn = document.getElementById('whose-turn');
@@ -177,6 +180,7 @@ function checkTie() {
 }
 function declareWinner(winner) {
   alert(winner + ' wins!');
+  closeBoard();
 }
 
 function declareTie() {
