@@ -5,13 +5,15 @@ const SIZE = ROWS * COLS;
 let boardState = [];
 //By convention: empty == 0 yellow == 1, red == 2
 let yellowsTurn = true;
+let gameStopped = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   initializeGame(ROWS, COLS); //Sizes other than 6x7 not implemented
-  // create click handler for each tile
 });
 
 function initializeGame(rows, columns) {
+  gameStopped = false;
+  yellowsTurn = true;
   const ROWS = rows;
   const COLUMNS = columns;
   // for (let i = 0; i < ROWS * COLUMNS; i++) {
@@ -30,18 +32,12 @@ function createGameBoard(boardSize) {
 
     let boardPortHole = document.createElement('div');
     boardPortHole.className = 'porthole';
-    boardPortHole.textContent = i;
-    //use firstElementChild to access this from the tile.
 
-    // append the elements onto the DOM
     boardTile.appendChild(boardPortHole);
     boardMain.insertBefore(boardTile, boardMain.childNodes[0]);
 
-    // create hover handler for each tile, change the color of the column
     boardTile.addEventListener('mouseenter', mouseoverHandler);
     boardTile.addEventListener('mouseleave', mouseoutHandler);
-
-    // create click handler for each tile
     boardTile.addEventListener('click', tileClickHandler);
   }
 }
@@ -74,7 +70,6 @@ function tileClickHandler() {
   checkTie();
 }
 
-// draw game on screen as it is being played
 function dropPiece(piece, currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
@@ -91,18 +86,19 @@ function dropPiece(piece, currentColumnArr) {
 }
 
 function nextTurn() {
-  yellowsTurn = !yellowsTurn;
-  let whoseTurn = document.getElementById('whose-turn');
-  if (yellowsTurn) {
-    whoseTurn.textContent = 'Yellow Goes';
-    whoseTurn.className = 'yellow-goes';
-  } else {
-    whoseTurn.textContent = 'Red Goes';
-    whoseTurn.className = 'red-goes';
+  if (!gameStopped) {
+    let whoseTurn = document.getElementById('whose-turn');
+    if (yellowsTurn) {
+      whoseTurn.textContent = 'Yellow Goes';
+      whoseTurn.className = 'yellow-goes';
+    } else {
+      whoseTurn.textContent = 'Red Goes';
+      whoseTurn.className = 'red-goes';
+    }
+    yellowsTurn = !yellowsTurn;
   }
 }
 
-// victory
 function checkWinner(position) {
   let checkFor = yellowsTurn ? 'yellow' : 'red';
   checkHorizWinner(position);
@@ -171,8 +167,11 @@ function checkWinner(position) {
   }
 }
 function declareWinner(winner) {
-  alert(winner + ' wins!');
+  let whoseTurn = document.getElementById('whose-turn');
+  whoseTurn.textContent = winner.toUpperCase() + ' WINS!!';
+  whoseTurn.className = winner + '-goes';
   closeBoard();
+  gameStopped = true;
 }
 
 function checkTie() {
@@ -186,17 +185,13 @@ function checkTie() {
     declareTie();
   }
 }
-
-// ties
 function declareTie() {
   closeBoard();
   alert('Tie! You both lose.');
-  // document.body.addEventListener('click', function() {
-  //   document.location.reload(false);
-  // });
+
+  gameStopped = true;
 }
 
-// closing tiles, columns, board
 function closeTile(position) {
   let tileToClose = document.getElementById(position);
   tileToClose.removeEventListener('mouseenter', mouseoverHandler);
@@ -214,7 +209,10 @@ function closeBoard() {
   for (let i = 0; i < SIZE; i++) {
     closeTile(i);
   }
-  document.getElementById('whose-turn').innerText = 'Reload to play again.';
-  document.getElementById('whose-turn').className = ''; // why doe this only work
-  //when there is a tie?
 }
+
+//reset Button onclick handler
+let resetButton = document.getElementById('reset');
+resetButton.addEventListener('click', function() {
+  location.reload();
+});

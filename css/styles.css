@@ -1,7 +1,7 @@
 body {
   background-color: #cccccc;
   font-family: 'Playfair Display', serif;
-  font-size: 1.8em; 
+  font-size: 1.8em;
 }
 main {
   display: grid;
@@ -53,4 +53,8 @@ main {
   main {
     width: 1000px;
   }
+}
+
+#reset {
+  font-size: 1.1em;
 }
