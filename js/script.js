@@ -30,6 +30,7 @@ function createGameBoard(boardSize) {
 
     let boardPortHole = document.createElement('div');
     boardPortHole.className = 'porthole';
+    boardPortHole.textContent = i;
     //use firstElementChild to access this from the tile.
 
     // append the elements onto the DOM
@@ -73,7 +74,7 @@ function tileClickHandler() {
   checkTie();
 }
 
-// draw game as it is being played
+// draw game on screen as it is being played
 function dropPiece(piece, currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
@@ -101,7 +102,7 @@ function nextTurn() {
   }
 }
 
-//check for wins and ties, declare victory
+// victory
 function checkWinner(position) {
   let checkFor = yellowsTurn ? 'yellow' : 'red';
   checkHorizWinner(position);
@@ -143,15 +144,31 @@ function checkWinner(position) {
       vertLine.push(boardState[i]);
     }
     checkArrayForWinner(vertLine);
-    console.log('checking vertical for', vertLine, checkFor);
+    // console.log('checking vertical for', vertLine, checkFor);
   }
-  function checkShortDiagWinner(position) {
-    console.log('checking diagonal1');
-  }
+  function checkShortDiagWinner(position) {}
   function checkLongDiagWinner(position) {
+    let diagLine = [];
+    let diagStart = position % (COLS + 1);
+    for (let i = diagStart; i < SIZE; i += COLS + 1) {
+      diagLine.push(boardState[i]);
+      console.log(i);
+      // if (i % COLS !== ((i - (COLS + 1)) % COLS) + 1) {
+      //   console.log('Wrapping is not a victory condition');
+      //   return; //TEST THIS!!
+      // }
+      checkArrayForWinner(diagLine);
+      console.log('checking diagonal for', diagLine, checkFor);
+    }
+
     console.log('checking diagonal2');
   }
 }
+function declareWinner(winner) {
+  alert(winner + ' wins!');
+  closeBoard();
+}
+
 function checkTie() {
   let j = 0;
   for (let i = 0; i < SIZE; i++) {
@@ -163,11 +180,8 @@ function checkTie() {
     declareTie();
   }
 }
-function declareWinner(winner) {
-  alert(winner + ' wins!');
-  closeBoard();
-}
 
+// ties
 function declareTie() {
   closeBoard();
   alert('Tie! You both lose.');
