@@ -67,18 +67,20 @@ function tileClickHandler() {
     : dropPiece('red', currentColumnArr);
 
   nextTurn();
+
+  checkTie();
 }
 function dropPiece(piece, currentColumnArr) {
   for (let i = 0; i < ROWS; i++) {
     let j = currentColumnArr[i];
     if (!boardState[j]) {
       boardState[j] = piece;
-      console.log(boardState);
       document.getElementById(j).firstChild.className = piece;
       if (i == ROWS - 1) {
         closeColumn(currentColumnArr);
       }
-      return;
+      checkWinner(j);
+      return j;
     }
   }
 }
@@ -105,8 +107,65 @@ function nextTurn() {
     whoseTurn.className = 'red-goes';
   }
 }
-function checkWinner() {}
-function declareWinner(winner) {}
+function checkWinner(position) {
+  let checkFor = yellowsTurn ? 'yellow' : 'red';
+  checkHorizWinner(position);
+  if (position >= COLS * 3) {
+    checkVerticalWinner(position);
+    checkDiag1Winner(position);
+    checkDiag2Winner(position);
+  }
+  function checkHorizWinner(position) {
+    // populate an array for horiz from position
+    let horizLine = [];
+    let rowStart = position - (position % COLS);
+    for (let i = rowStart; i < rowStart + COLS; i++) {
+      horizLine.push(boardState[i]);
+    }
+    console.log(horizLine);
+    // loop through array to check if winner
+    for (let i = 0; i < COLS - 3; i++) {
+      let checkString = '';
+      for (let j = 0; j < 4; j++) {
+        checkString += horizLine[j + i];
+      }
+      console.log(checkString);
+      if (checkString == checkFor.repeat(4)) {
+        declareWinner(checkFor);
+      }
+    }
+    console.log('checking horizontal for', checkFor);
+  }
+  function checkVerticalWinner(position) {
+    console.log('checking vertical');
+  }
+  function checkDiag1Winner(position) {
+    console.log('checking diagonal1');
+  }
+  function checkDiag2Winner(position) {
+    console.log('checking diagonal2');
+  }
+}
+function checkTie() {
+  let j = 0;
+  for (let i = 0; i < SIZE; i++) {
+    if (boardState[i]) {
+      j++;
+    }
+  } //for
+  if (j === 42) {
+    declareTie();
+  }
+}
+function declareWinner(winner) {
+  console.log(winner, 'wins!');
+}
+
 function declareTie() {
-  document.location.reload(false);
+  document.getElementById('whose-turn').innerText =
+    'Tie. Reload to play again.';
+  document.getElementById('whose-turn').className = '';
+  // document.body.addEventListener('click', function() {
+  //   document.location.reload(false);
+  // });
 }
