@@ -11,16 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // create click handler for each tile
 });
 
-let initializeGame = function(rows, columns) {
+function initializeGame(rows, columns) {
   const ROWS = rows;
   const COLUMNS = columns;
-  for (let i = 0; i < ROWS * COLUMNS; i++) {
-    boardState.push(0);
-  }
+  // for (let i = 0; i < ROWS * COLUMNS; i++) {
+  //   boardState.push(0);
+  // }
   createGameBoard(ROWS * COLUMNS);
-};
+}
 
-let createGameBoard = function(boardSize) {
+function createGameBoard(boardSize) {
   let boardMain = document.getElementsByTagName('main')[0];
   for (let i = 0; i < boardSize; i++) {
     // create each element
@@ -43,24 +43,53 @@ let createGameBoard = function(boardSize) {
     // create click handler for each tile
     boardTile.addEventListener('click', tileClickHandler);
   }
-};
-let mouseoverHandler = function() {
+}
+function mouseoverHandler() {
   let currentColumn = this.id % COLS;
   for (let i = currentColumn; i < SIZE; i += COLS) {
-    document.getElementById(i.toString()).classList.add('hovered');
+    document.getElementById(i).classList.add('hovered');
   }
-};
-let mouseoutHandler = function() {
+}
+function mouseoutHandler() {
   let currentColumn = this.id % COLS;
   for (let i = currentColumn; i < SIZE; i += COLS) {
-    document.getElementById(i.toString()).classList.remove('hovered');
+    document.getElementById(i).classList.remove('hovered');
   }
-};
-let tileClickHandler = function() {
+}
+function tileClickHandler() {
   let currentColumnNum = this.id % COLS;
   let currentColumnArr = [];
   for (let i = currentColumnNum; i < SIZE; i += COLS) {
     currentColumnArr.push(i);
   }
-  console.log(currentColumnArr);
-};
+  yellowsTurn
+    ? dropPiece('yellow', currentColumnArr)
+    : dropPiece('red', currentColumnArr);
+
+  nextTurn();
+}
+function dropPiece(piece, currentColumnArr) {
+  for (let i = 0; i < ROWS; i++) {
+    let j = currentColumnArr[i];
+    if (!boardState[j]) {
+      boardState[j] = piece;
+      console.log(boardState);
+      document.getElementById(j).firstChild.className = piece;
+      return;
+    }
+  }
+}
+
+function nextTurn() {
+  yellowsTurn = !yellowsTurn;
+  let whoseTurn = document.getElementById('whose-turn');
+  if (yellowsTurn) {
+    whoseTurn.textContent = 'Yellow Goes';
+    whoseTurn.className = 'yellow-goes';
+  } else {
+    whoseTurn.textContent = 'Red Goes';
+    whoseTurn.className = 'red-goes';
+  }
+}
+function checkWinner() {}
+function declareWinner(winner) {}

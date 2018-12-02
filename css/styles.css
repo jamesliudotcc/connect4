@@ -1,10 +1,17 @@
 body {
   background-color: #cccccc;
+  font-family: 'Playfair Display', serif;
 }
 main {
   display: grid;
   grid-template-columns: repeat(7, 12vw);
   grid-template-rows: repeat(6, 12vw);
+}
+.yellow-goes {
+  color: #cb9d00;
+}
+.red-goes {
+  color: #a00016;
 }
 .tile {
   height: 100%;
