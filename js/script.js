@@ -106,9 +106,10 @@ function nextTurn() {
 function checkWinner(position) {
   let checkFor = yellowsTurn ? 'yellow' : 'red';
   checkHorizWinner(position);
-
   checkShortDiagWinner(position);
   checkLongDiagWinner(position);
+  //diagonals are short or long depending on whether the interval
+  //is 6, short, or 8, long.
 
   if (position >= COLS * 3) {
     checkVerticalWinner(position);
@@ -126,6 +127,21 @@ function checkWinner(position) {
       }
     } // for
   }
+  //helper function for checking vertical and diagonals
+  function checkUsingInterval(position, interval) {
+    let testLine = [];
+    let lineStart = position % interval;
+    for (let i = lineStart; i < SIZE; i += interval) {
+      testLine.push(boardState[i]);
+      let wrapCheck = Math.floor((i + interval) / COLS) - Math.floor(i / COLS);
+
+      checkArrayForWinner(testLine);
+
+      if (wrapCheck !== 1) {
+        return; //TEST THIS!!
+      }
+    }
+  }
 
   function checkHorizWinner(position) {
     // populate an array for horiz from position
@@ -138,30 +154,20 @@ function checkWinner(position) {
   }
   function checkVerticalWinner(position) {
     // populate an array for vert from position
-    let vertLine = [];
-    let colStart = position % COLS;
-    for (let i = colStart; i < SIZE; i += COLS) {
-      vertLine.push(boardState[i]);
-    }
-    checkArrayForWinner(vertLine);
+    const interval = COLS;
+
+    checkUsingInterval(position, interval);
     // console.log('checking vertical for', vertLine, checkFor);
   }
-  function checkShortDiagWinner(position) {}
-  function checkLongDiagWinner(position) {
-    let diagLine = [];
-    let diagStart = position % (COLS + 1);
-    for (let i = diagStart; i < SIZE; i += COLS + 1) {
-      diagLine.push(boardState[i]);
-      console.log(i);
-      // if (i % COLS !== ((i - (COLS + 1)) % COLS) + 1) {
-      //   console.log('Wrapping is not a victory condition');
-      //   return; //TEST THIS!!
-      // }
-      checkArrayForWinner(diagLine);
-      console.log('checking diagonal for', diagLine, checkFor);
-    }
+  function checkShortDiagWinner(position) {
+    const interval = COLS - 1;
 
-    console.log('checking diagonal2');
+    checkUsingInterval(position, interval);
+  }
+  function checkLongDiagWinner(position) {
+    const interval = COLS + 1;
+
+    checkUsingInterval(position, interval);
   }
 }
 function declareWinner(winner) {
