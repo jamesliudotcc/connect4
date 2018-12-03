@@ -16,9 +16,6 @@ function initializeGame(rows, columns) {
   yellowsTurn = true;
   const ROWS = rows;
   const COLUMNS = columns;
-  // for (let i = 0; i < ROWS * COLUMNS; i++) {
-  //   boardState.push(0);
-  // }
   createGameBoard(ROWS * COLUMNS);
 }
 
@@ -66,8 +63,6 @@ function tileClickHandler() {
     : dropPiece('red', currentColumnArr);
 
   nextTurn();
-
-  checkTie();
 }
 
 function dropPiece(piece, currentColumnArr) {
@@ -79,6 +74,8 @@ function dropPiece(piece, currentColumnArr) {
       if (i == ROWS - 1) {
         closeColumn(currentColumnArr);
       }
+      checkTie();
+
       checkWinner(j);
       return j;
     }
@@ -87,6 +84,7 @@ function dropPiece(piece, currentColumnArr) {
 
 function nextTurn() {
   if (!gameStopped) {
+    yellowsTurn = !yellowsTurn;
     let whoseTurn = document.getElementById('whose-turn');
     if (yellowsTurn) {
       whoseTurn.textContent = 'Yellow Goes';
@@ -95,7 +93,6 @@ function nextTurn() {
       whoseTurn.textContent = 'Red Goes';
       whoseTurn.className = 'red-goes';
     }
-    yellowsTurn = !yellowsTurn;
   }
 }
 
