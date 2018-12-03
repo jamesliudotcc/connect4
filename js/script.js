@@ -8,20 +8,18 @@ let yellowsTurn = true;
 let gameStopped = false;
 
 document.addEventListener('DOMContentLoaded', function() {
-  initializeGame(ROWS, COLS); //Sizes other than 6x7 not implemented
+  initializeGame(); //Sizes other than 6x7 not implemented
 });
 
-function initializeGame(rows, columns) {
+function initializeGame() {
   gameStopped = false;
   yellowsTurn = true;
-  const ROWS = rows;
-  const COLUMNS = columns;
-  createGameBoard(ROWS * COLUMNS);
+  createGameBoard();
 }
 
-function createGameBoard(boardSize) {
+function createGameBoard() {
   let boardMain = document.getElementsByTagName('main')[0];
-  for (let i = 0; i < boardSize; i++) {
+  for (let i = 0; i < SIZE + COLS; i++) {
     // create each element
     let boardTile = document.createElement('div');
     boardTile.className = 'tile';
@@ -37,6 +35,11 @@ function createGameBoard(boardSize) {
     boardTile.addEventListener('mouseleave', mouseoutHandler);
     boardTile.addEventListener('click', tileClickHandler);
   }
+  //make invisible row invisible
+  for (let i = SIZE; i < SIZE + COLS; i++) {
+    let boardTile = document.getElementById(i);
+    boardTile.className = '';
+  }
 }
 
 //click and mouse-over handlers
@@ -45,12 +48,19 @@ function mouseoverHandler() {
   for (let i = currentColumn; i < SIZE; i += COLS) {
     document.getElementById(i).classList.add('hovered');
   }
+  //set invisible row to correct tile
+  yellowsTurn
+    ? (document.getElementById(currentColumn + SIZE).firstChild.className =
+        'yellow')
+    : (document.getElementById(currentColumn + SIZE).firstChild.className =
+        'red');
 }
 function mouseoutHandler() {
   let currentColumn = this.id % COLS;
   for (let i = currentColumn; i < SIZE; i += COLS) {
     document.getElementById(i).classList.remove('hovered');
   }
+  document.getElementById(currentColumn + SIZE).firstChild.className = '';
 }
 function tileClickHandler() {
   let currentColumnNum = this.id % COLS;

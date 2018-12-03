@@ -5,7 +5,7 @@ body {
 main {
   display: grid;
   grid-template-columns: repeat(7, 12vw);
-  grid-template-rows: repeat(6, 12vw);
+  grid-template-rows: repeat(7, 12vw);
 }
 .yellow-goes {
   color: #cb9d00;
@@ -55,7 +55,7 @@ main {
   main {
     display: grid;
     grid-template-columns: repeat(7, 100px);
-    grid-template-rows: repeat(6, 100px);
+    grid-template-rows: repeat(7, 100px);
   }
   .main-container {
     display: flex;
