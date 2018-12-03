@@ -47,13 +47,23 @@ main {
 .hovered {
   background-color: #58acf7;
 }
-
-@media screen and (min-device-width: 1200px) {
-  main {
-    width: 1000px;
-  }
+.container {
+  width: 900px;
 }
 
+@media screen and (min-width: 702px) {
+  main {
+    display: grid;
+    grid-template-columns: repeat(7, 100px);
+    grid-template-rows: repeat(6, 100px);
+  }
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
 #reset {
   font-size: 0.7em;
 }
